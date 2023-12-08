@@ -9,4 +9,4 @@ Example of API:
 
 Example of json response:
 
-![json response](https://github.com/dgnezda/VehiclePriceCalc/blob/8a564054485d3fea8e366c4f443bfdbea536935b/img/response2.png)
+![json response](https://github.com/dgnezda/VehiclePriceCalc/blob/e28bfb3e2a7a53fad706e01d9216b51108b23c91/img/response2.png)
