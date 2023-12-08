@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<VehicleContext>(opt =>
     opt.UseInMemoryDatabase("VehicleList"));
+builder.Services.AddDbContext<CalculationContext>(opt =>
+    opt.UseInMemoryDatabase("CalculationList"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
