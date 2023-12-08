@@ -38,8 +38,8 @@ namespace VehiclePriceCalc.Controllers
                     vatRate = input.Tax,
                     baseVehicleNetPrice = vehicleNetPrice,
                     baseVehicleGrossPrice = vehicleGrossPrice,
-                    additionalEquipmentNet = addonsNetPrice,
-                    additionalEquipmentGross = addonsGrossPrice,
+                    additionalEquipmentNetPrice = addonsNetPrice,
+                    additionalEquipmentGrossPrice = addonsGrossPrice,
                     vehicleTotalNetPrice = totalNetPrice,
                     vehicleTotalGrossPrice = totalGrossPrice
                 });
