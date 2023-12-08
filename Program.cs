@@ -9,6 +9,8 @@ builder.Services.AddDbContext<VehicleContext>(opt =>
     opt.UseInMemoryDatabase("VehicleList"));
 builder.Services.AddDbContext<CalculationContext>(opt =>
     opt.UseInMemoryDatabase("CalculationList"));
+builder.Services.AddDbContext<AddonContext>(opt =>
+    opt.UseInMemoryDatabase("AddonList"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
