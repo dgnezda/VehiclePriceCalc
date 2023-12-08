@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Runtime.CompilerServices;
+// using System.Threading.Tasks;
+// using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+// using Microsoft.EntityFrameworkCore;
 using VehiclePriceCalc.Models;
 
 namespace VehiclePriceCalc.Controllers
@@ -20,48 +21,35 @@ namespace VehiclePriceCalc.Controllers
             _context = context;
         }
 
-        // GET: api/calculateNet
+        // GET: api/calculatePrice
         [HttpGet]
-        [Route("calculateNet")]
-        public IActionResult CalculateNetGet([FromQuery] CalculationInput input) 
-        {
-            return Ok(new { result = CalculateNet(input.VehiclePrice, input.IsVehiclePriceNet, input.AddonsPrice, input.IsAddonsPriceNet, input.Tax) });
-        }
-
-        // GET: api/calculateGross
-        [HttpGet]
-        [Route("calculateGross")]
+        [Route("calculatePrice")]
         public IActionResult CalculateGrossGet([FromQuery] CalculationInput input) 
         {
-            return Ok(new { result = CalculateGross(input.VehiclePrice, input.IsVehiclePriceNet, input.AddonsPrice, input.IsAddonsPriceNet, input.Tax) });
-        }
+            var vehicleNetPrice = input.IsVehiclePriceNet 
+                ? input.VehiclePrice 
+                : input.VehiclePrice / (1 + (input.Tax / 100));
+            var vehicleGrossPrice = input.IsVehiclePriceNet 
+                ? input.VehiclePrice + (input.VehiclePrice * (input.Tax / 100)) 
+                : input.VehiclePrice;
+            var addonsNetPrice = input.IsAddonsPriceNet 
+                ? input.AddonsPrice 
+                : input.AddonsPrice / (1 + (input.Tax / 100));
+            var addonsGrossPrice = input.IsAddonsPriceNet 
+                ? input.AddonsPrice + (input.AddonsPrice * (input.Tax / 100)) 
+                : input.AddonsPrice;
+            var totalNetPrice = vehicleNetPrice + addonsNetPrice;
+            var totalGrossPrice = vehicleGrossPrice + addonsGrossPrice;
 
-        // Calculate Net Price Method
-        private static double CalculateNet(double vehiclePrice, bool isVehiclePriceNet, double addonsPrice, bool isAddonsPriceNet, double tax) 
-        {
-            if (!isVehiclePriceNet)
-            {
-                vehiclePrice = vehiclePrice / (1 + (tax / 100));
-            }
-            if (!isAddonsPriceNet) 
-            {
-                addonsPrice = addonsPrice / (1 + (tax / 100));
-            }
-            return Math.Round(vehiclePrice + addonsPrice, 2);
-        }
-
-        // Calculate Gross Price Method
-        private static double CalculateGross(double vehiclePrice, bool isVehiclePriceNet, double addonsPrice, bool isAddonsPriceNet, double tax)
-        {
-            if (isVehiclePriceNet)
-            {
-                vehiclePrice += vehiclePrice * (tax / 100);
-            }
-            if (isAddonsPriceNet)
-            {
-                addonsPrice += addonsPrice * (tax / 100);
-            }
-            return Math.Round(vehiclePrice + addonsPrice, 2);
+            return Ok(new { 
+                    vatRate = input.Tax,
+                    baseVehicleNetPrice = vehicleNetPrice,
+                    baseVehicleGrossPrice = vehicleGrossPrice,
+                    additionalEquipmentNet = addonsNetPrice,
+                    additionalEquipmentGross = addonsGrossPrice,
+                    vehicleTotalNetPrice = totalNetPrice,
+                    vehicleTotalGrossPrice = totalGrossPrice
+                });
         }
     }
 }
